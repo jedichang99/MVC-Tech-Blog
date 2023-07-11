@@ -1,0 +1,64 @@
+const express = require("express");
+const router = express.Router();
+const { Post } = require("../models");
+
+// Get all posts
+router.get("/", async (req, res) => {
+  try {
+    const posts = await Post.findAll();
+    res.render("home", { posts, logged_in: req.session.logged_in });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Get a specific post
+router.get("/:id", async (req, res) => {
+  try {
+    const post = await Post.findByPk(req.params.id);
+    res.render("post", { post, logged_in: req.session.logged_in });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Create a new post
+router.post("/", async (req, res) => {
+  try {
+    const { title, content } = req.body;
+    const post = await Post.create({
+      title,
+      content,
+      user_id: req.session.user_id,
+    });
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Update a post
+router.put("/:id", async (req, res) => {
+  try {
+    const { title, content } = req.body;
+    const post = await Post.update(
+      { title, content },
+      { where: { id: req.params.id } }
+    );
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Delete a post
+router.delete("/:id", async (req, res) => {
+  try {
+    const post = await Post.destroy({ where: { id: req.params.id } });
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+module.exports = router;
