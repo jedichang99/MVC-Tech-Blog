@@ -1,0 +1,12 @@
+<h1>All Blog Posts</h1>
+
+{{#each posts}}
+  <div class="post">
+    <h2>{{title}}</h2>
+    <p>By {{user.username}} on {{createdAt}}</p>
+    <p>{{content}}</p>
+    <a href="/blog/posts/{{id}}">Read More</a>
+  </div>
+{{else}}
+  <p>No posts found.</p>
+{{/each}}
