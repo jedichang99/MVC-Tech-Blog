@@ -1,8 +1,16 @@
-const { DataTypes } = require("sequelize");
-const bcrypt = require("bcrypt");
+const { Model, DataTypes } = require("sequelize");
+const sequelize = require("../../config/connection");
 
-module.exports = (sequelize) => {
-  const User = sequelize.define("User", {
+class User extends Model {}
+
+User.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -12,18 +20,14 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-  });
+  },
+  {
+    sequelize,
+    timestamps: false,
+    freezeTableName: true,
+    underscored: true,
+    modelName: "user",
+  }
+);
 
-  // Hash password before saving the user
-  User.addHook("beforeSave", async (user) => {
-    user.password = await bcrypt.hash(user.password, 10);
-    return user;
-  });
-
-  // Method to compare hashed passwords
-  User.prototype.checkPassword = async function (password) {
-    return await bcrypt.compare(password, this.password);
-  };
-
-  return User;
-};
+module.exports = User;

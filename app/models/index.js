@@ -1,28 +1,15 @@
 const Sequelize = require("sequelize");
 
 const env = process.env.NODE_ENV || "development";
-const config = require("../../config/config.json")[env];
-
-const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  {
-    host: config.host,
-    port: config.port,
-    dialect: config.dialect,
-    dialectOptions: config.dialectOptions,
-    pool: config.pool,
-  }
-);
+const config = require("../../config/connection")[env];
 
 const db = {};
 
 db.Sequelize = Sequelize;
-db.sequelize = sequelize;
+// db.sequelize = sequelize;
 
-db.User = require("./user")(sequelize, Sequelize);
-db.Post = require("./post")(sequelize, Sequelize);
+db.User = require("./user");
+db.Post = require("./post");
 
 // Define associations
 db.User.hasMany(db.Post, { foreignKey: "user_id" });
