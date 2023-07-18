@@ -39,6 +39,9 @@ const hbs = exphbs.create({
   defaultLayout: "main",
   extname: ".handlebars",
 });
+
+app.set("views", path.join(__dirname, "app/views"));
+
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 
@@ -51,6 +54,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.use("/", require("./app/routes/home")); 
+app.use("/signin", require("./app/routes/authRoutes")); 
 app.use("/dashboard", require("./app/routes/blogRoutes"));
 app.use("/auth", require("./app/routes/authRoutes")); 
 app.use("/post", require("./app/routes/postRoutes")); 
